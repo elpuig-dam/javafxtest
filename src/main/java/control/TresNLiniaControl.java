@@ -1,5 +1,6 @@
 package control;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -72,7 +73,19 @@ public class TresNLiniaControl {
                 //triar qui comença Human o Computer
                 if (Math.random() < 0.5) jocComputer();
             }
-        }else while (!acabat) acabat = jocComputer();
+        }else {
+            new Thread(() -> {
+                while (!acabat) {
+                    Platform.runLater(()->jocComputer());
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+
+        }
     }
 
     @FXML public void initialize() {
